@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { invoke } from "@tauri-apps/api/core";
+// import { ref } from "vue";
+// import { invoke } from "@tauri-apps/api/core";
 import Editor from './components/Editor.vue';
 </script>
 
@@ -29,7 +29,5 @@ import Editor from './components/Editor.vue';
 .container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 16px;
 }
 </style>
