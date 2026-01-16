@@ -1,17 +1,18 @@
 use std::fs;
+use std::path::Path;
 
 const TMP_EXT: &str = ".tmp";
 
-pub fn remove_file(path: &str) -> std::io::Result<()> {
+pub fn remove_file<P: AsRef<Path>>(path: P) -> std::io::Result<()> {
     fs::remove_file(path)
 }
 
-pub fn read_file(path: &str) -> std::io::Result<String> {
+pub fn read_file<P: AsRef<Path>>(path: P) -> std::io::Result<String> {
     fs::read_to_string(path)
 }
 
-pub fn write_file(path: &str, content: &str) -> std::io::Result<()> {
-    let tmp_path = format!("{}{}", path, TMP_EXT);
+pub fn write_file<P: AsRef<Path>>(path: P, content: &str) -> std::io::Result<()> {
+    let tmp_path = format!("{}{}", path.as_ref().display(), TMP_EXT);
     fs::write(&tmp_path, content)?;
     if let Err(e) = fs::rename(&tmp_path, path) {
         let _ = fs::remove_file(&tmp_path).ok();

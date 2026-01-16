@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { EditorContent, useEditor } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
+import { invoke } from '@tauri-apps/api/core';
 
 const editor = useEditor({
     extensions: [
@@ -13,11 +14,17 @@ const editor = useEditor({
     },
     content: '',
     autofocus: true,
-}) as any;
+});
+
+async function save() {
+    const content = editor.value?.getHTML();
+    if (!content) return;
+    await invoke('save_content', { uid: 'test', content: content });
+}
 </script>
 
 <template>
-    <div id="editor" class="container">
+    <div id="editor" class="container" v-if="editor">
         <div id="editor-header" class="container">
             <!-- <h2>Rich Text Editor</h2> -->
         </div>
@@ -31,7 +38,7 @@ const editor = useEditor({
             <EditorContent :editor="editor" />
         </div>
         <div id="editor-footer" class="container">
-            <button @click="">Save Version</button>
+            <button @click="save()">Save Version</button>
             <button @click="editor.chain().focus().setContent('').run()">Reset</button>
         </div>
     </div>
