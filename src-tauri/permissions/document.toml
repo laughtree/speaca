@@ -1,0 +1,14 @@
+[[permission]]
+identifier = "document-r"
+commands.allow = ["load_content", "load_meta"]
+
+[[permission]]
+identifier = "document-w"
+commands.allow = ["save_content", "save_meta"]
+
+[[permission]]
+identifier = "document-default"
+permissions = [
+    "document-r",
+    "document-w"
+]

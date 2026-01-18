@@ -1,12 +1,24 @@
 <script setup lang="ts">
-// import { ref } from "vue";
-// import { invoke } from "@tauri-apps/api/core";
+import { ref } from 'vue';
 import Editor from './components/Editor.vue';
+import FloatButton from './components/FloatButton.vue';
+import Menu from './components/Menu.vue';
+
+const showMenu = ref<boolean>(false);
+
+function toggleMenu() {
+  showMenu.value = !showMenu.value;
+  console.log('Toggled menu:', showMenu.value);
+}
 </script>
 
 <template>
   <main class="container">
     <Editor />
+    <FloatButton @click="toggleMenu">
+      +
+    </FloatButton>
+    <Menu v-if="showMenu" />
   </main>
 </template>
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { EditorContent, useEditor } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
-import { invoke } from '@tauri-apps/api/core';
+import { saveContent, loadContent } from '../apis/document';
 
 const editor = useEditor({
     extensions: [
@@ -9,7 +9,7 @@ const editor = useEditor({
     ],
     editorProps: {
         attributes: {
-
+            class: 'tiptap-editor',
         },
     },
     content: '',
@@ -17,9 +17,10 @@ const editor = useEditor({
 });
 
 async function save() {
-    const content = editor.value?.getHTML();
+    const content = editor.value?.getJSON();
     if (!content) return;
-    await invoke('save_content', { uid: 'test', content: content });
+    const contentStr = JSON.stringify(content, null, 2);
+    await saveContent('test', contentStr);
 }
 </script>
 
@@ -28,7 +29,7 @@ async function save() {
         <div id="editor-header" class="container">
             <!-- <h2>Rich Text Editor</h2> -->
         </div>
-        <div id="editor-toolbar" class="container">
+        <div id="editor-toolbar" class="container toolbar">
             <button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }">Bold</button>
             <button @click="editor.chain().focus().toggleItalic().run()" :class="{ 'is-active': editor.isActive('italic') }">Italic</button>
             <button @click="editor.chain().focus().toggleUnderline().run()" :class="{ 'is-active': editor.isActive('underline') }">Underline</button>
@@ -37,7 +38,7 @@ async function save() {
         <div id="editor-content" class="container">
             <EditorContent :editor="editor" />
         </div>
-        <div id="editor-footer" class="container">
+        <div id="editor-footer" class="container toolbar align-right">
             <button @click="save()">Save Version</button>
             <button @click="editor.chain().focus().setContent('').run()">Reset</button>
         </div>
@@ -52,8 +53,12 @@ async function save() {
     background-color: #cfcec9;
 }
 
-#editor-toolbar {
+.toolbar {
     flex-direction: row;
+}
+
+.align-right {
+    justify-content: flex-end;
 }
 
 button {
@@ -68,4 +73,33 @@ button {
 button.is-active {
     background-color: #b0b0b0;
 }
+
+:deep(.tiptap) {
+    outline: none;
+}
+
+:deep(.tiptap p) {
+    text-indent: 2em;
+    line-height: 1.8;
+    margin-top: 0.9em;
+    margin-bottom: 0.9em;
+}
+
+:deep(.tiptap p.is-empty::before) {
+    content: attr(data-placeholder);
+    float: left;
+    color: #adb5bd;
+    pointer-events: none;
+    height: 0;
+    text-indent: 0;
+}
+
+:deep(.tiptap h1), :deep(.tiptap h2), :deep(.tiptap h3), :deep(.tiptap h4), :deep(.tiptap h5), :deep(.tiptap h6) {
+    text-indent: 0;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+
 </style>

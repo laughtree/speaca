@@ -20,3 +20,8 @@ pub fn write_file<P: AsRef<Path>>(path: P, content: &str) -> std::io::Result<()>
     }
     Ok(())
 }
+
+pub fn import_file<P: AsRef<Path>>(src: P, dest: P) -> std::io::Result<()> {
+    fs::copy(src, dest).map(|_| ())
+}
+
