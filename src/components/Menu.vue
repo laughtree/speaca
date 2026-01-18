@@ -5,9 +5,9 @@
     <div id="menu" class="container float-menu">
         <h2>Menu Component</h2>
         <button @click="$emit('close')">Close Menu</button>
-        <button>Option 1</button>
-        <button>Option 2</button>
-        <button>Option 3</button>
+        <button @click="$emit('new-work')">New Work</button>
+        <button @click="$emit('option-2')">Read</button>
+        <button @click="$emit('option-3')">Option 3</button>
     </div>
 </template>
 <style scoped>

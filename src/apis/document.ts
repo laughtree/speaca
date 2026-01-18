@@ -8,4 +8,16 @@ async function saveContent(uid: string, content: string): Promise<string> {
   return await invoke('save_content', { uid, content });
 }
 
-export { loadContent, saveContent };
+async function loadMeta(name: string): Promise<string> {
+  return await invoke('load_meta', { name });
+}
+
+async function saveMeta(name: string, content: string): Promise<string> {
+  return await invoke('save_meta', { name, content });
+}
+
+async function createNewWork(name: string, author: string): Promise<string> {
+  return await invoke('create_new_work', { name, author });
+}
+
+export { loadContent, saveContent, loadMeta, saveMeta, createNewWork };

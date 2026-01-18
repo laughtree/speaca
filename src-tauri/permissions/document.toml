@@ -4,7 +4,7 @@ commands.allow = ["load_content", "load_meta"]
 
 [[permission]]
 identifier = "document-w"
-commands.allow = ["save_content", "save_meta"]
+commands.allow = ["save_content", "save_meta", "create_new_work"]
 
 [[permission]]
 identifier = "document-default"

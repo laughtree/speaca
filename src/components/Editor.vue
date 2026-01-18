@@ -16,12 +16,27 @@ const editor = useEditor({
     autofocus: true,
 });
 
+let uid : string = '';
+
 async function save() {
     const content = editor.value?.getJSON();
     if (!content) return;
     const contentStr = JSON.stringify(content, null, 2);
-    await saveContent('test', contentStr);
+    await saveContent(uid, contentStr);
 }
+
+async function load(target_uid : string = 'test') {
+    uid = target_uid;
+    const contentStr = await loadContent(uid);
+    if (!contentStr) return;
+    const content = JSON.parse(contentStr);
+    editor.value?.commands.setContent(content);
+}
+
+defineExpose({
+    load,
+    save,
+});
 </script>
 
 <template>
@@ -39,7 +54,7 @@ async function save() {
             <EditorContent :editor="editor" />
         </div>
         <div id="editor-footer" class="container toolbar align-right">
-            <button @click="save()">Save Version</button>
+            <button @click="save()">Save</button>
             <button @click="editor.chain().focus().setContent('').run()">Reset</button>
         </div>
     </div>
