@@ -51,6 +51,11 @@ async function loadEditing() {
       </n-breadcrumb>
     </div>
     <Editor ref="EditorRef" />
+    <router-view v-slot="{ Component }">
+      <transition name="fade" mode="out-in">
+        <component :is="Component" />
+      </transition>
+    </router-view>
     <FloatButton @click="toggleMenu">
       +
     </FloatButton>
