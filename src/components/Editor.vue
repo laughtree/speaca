@@ -28,6 +28,7 @@ async function save() {
 async function load(target_uid : string = 'test') {
     uid = target_uid;
     const contentStr = await loadContent(uid);
+    console.log('Loaded content ', uid, ' : ', contentStr)
     if (!contentStr) return;
     const content = JSON.parse(contentStr);
     editor.value?.commands.setContent(content);

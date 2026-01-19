@@ -3,10 +3,11 @@ import { ref } from 'vue';
 import Editor from './components/Editor.vue';
 import FloatButton from './components/FloatButton.vue';
 import Menu from './components/Menu.vue';
-import { createNewWork, saveMeta } from './apis/document';
+import { createNewWork, loadMeta, saveMeta } from './apis/document';
 
 const showMenu = ref<boolean>(false);
 const EditorRef = ref<InstanceType<typeof Editor> | null>(null);
+const workRef = ref<Object>(null)
 
 function toggleMenu() {
   showMenu.value = !showMenu.value;
@@ -20,18 +21,31 @@ function closeMenu() {
 async function newWork() {
   const work = await createNewWork("New Work", "Unknown Author");
   console.log('Created new work: ', work);
-  let editing_chap = work.latest_edited_chapter;
-  let editing_branch = work.latest_edited_branch;
-  await EditorRef.value?.load(work.chapters[editing_chap][editing_branch].uid);
+  workRef.value = work;
+  await loadEditing();
 }
 
 async function load() {
-  await EditorRef.value?.load();
+  const work = await loadMeta("New Work");
+  console.log('Loaded work: ', work);
+  workRef.value = work;
+  await loadEditing();
+}
+
+async function loadEditing() {
+  const work = workRef.value;
+  let editing_chap = work.latest_edited_chapter;
+  let editing_branch = work.latest_edited_branch;
+  await EditorRef.value?.load(work.chapters[editing_chap][editing_branch].uid);
 }
 </script>
 
 <template>
   <main class="container">
+    <div id="header" class="container">
+      <h1 v-if="workRef">{{ workRef.title }} | {{workRef.latest_edited_chapter}} - {{workRef.chapters[workRef.latest_edited_chapter][workRef.latest_edited_branch].title}}</h1>
+      <br>
+    </div>
     <Editor ref="EditorRef" />
     <FloatButton @click="toggleMenu">
       +

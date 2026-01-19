@@ -48,7 +48,7 @@ pub fn save_meta<R: Runtime>(app: AppHandle<R>, name: String, content: String) -
     }
 
     let metaname : String = format!("{}{}", name, META_EXT);
-    let mut metadata = content;
+    let metadata = content;
     if metadata.is_empty() {
         return Err("Metadata content is empty".to_string());
     }
@@ -60,13 +60,14 @@ pub fn save_meta<R: Runtime>(app: AppHandle<R>, name: String, content: String) -
 }
 
 #[command]
-pub fn load_meta<R: Runtime>(app: AppHandle<R>, name: String) -> Result<String, String> {
+pub fn load_meta<R: Runtime>(app: AppHandle<R>, name: String) -> Result<workInfo, String> {
     let mut save_dir = app.path().document_dir().map_err(|_| "Could not find documents directory".to_string())?;
     save_dir.push(SAVE_FOLDER);
     let mut meta_path = save_dir.clone();
     meta_path.push(format!("{}{}", name, META_EXT));
+
     match read_file(&meta_path) {
-        Ok(data) => Ok(data),
+        Ok(data) => serde_json::from_str::<workInfo>(&data).map_err(|e| e.to_string()),
         Err(e) => Err(e.to_string()),
     }
 }
@@ -80,6 +81,12 @@ pub fn create_new_work<R: Runtime>(app: AppHandle<R>, name: String, author: Stri
     save_dir.push(SAVE_FOLDER);
     if !save_dir.exists() {
         std::fs::create_dir_all(&save_dir).map_err(|e| format!("Failed to create save directory: {}", e))?;
+    }
+
+    let mut save_path = save_dir.clone();
+    save_path.push(format!("{}{}", name, META_EXT));
+    if save_path.exists() {
+        return Err("Work existed!".to_string());
     }
 
     let work = workInfo::new(name.clone(), author);
