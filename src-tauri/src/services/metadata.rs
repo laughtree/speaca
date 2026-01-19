@@ -36,6 +36,12 @@ pub struct workInfo {
     pub latest_edited_branch: u32,
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct editorState {
+    pub editing_work: String,
+    
+}
+
 impl workInfo {
     pub fn new(title: String, author: String) -> Self {
         let mut chapters: Vec<Vec<chapterReference>> = Vec::new();

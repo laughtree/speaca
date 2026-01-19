@@ -5,6 +5,8 @@ import FloatButton from './components/FloatButton.vue';
 import Menu from './components/Menu.vue';
 import { createNewWork, loadMeta, saveMeta } from './apis/document';
 
+import { NBreadcrumb, NBreadcrumbItem } from 'naive-ui';
+
 const showMenu = ref<boolean>(false);
 const EditorRef = ref<InstanceType<typeof Editor> | null>(null);
 const workRef = ref<Object>(null)
@@ -43,8 +45,10 @@ async function loadEditing() {
 <template>
   <main class="container">
     <div id="header" class="container">
-      <h1 v-if="workRef">{{ workRef.title }} | {{workRef.latest_edited_chapter}} - {{workRef.chapters[workRef.latest_edited_chapter][workRef.latest_edited_branch].title}}</h1>
-      <br>
+     <n-breadcrumb separator=">" v-if="workRef">
+        <n-breadcrumb-item v-if="workRef">{{ workRef.title }}</n-breadcrumb-item>
+        <n-breadcrumb-item v-if="workRef">{{ workRef.latest_edited_chapter }} | {{workRef.chapters[workRef.latest_edited_chapter][workRef.latest_edited_branch].title}}</n-breadcrumb-item>
+      </n-breadcrumb>
     </div>
     <Editor ref="EditorRef" />
     <FloatButton @click="toggleMenu">

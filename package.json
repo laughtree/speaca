@@ -10,11 +10,13 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@floating-ui/vue": "^1.1.9",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
     "@tiptap/pm": "^3.15.3",
     "@tiptap/starter-kit": "^3.15.3",
     "@tiptap/vue-3": "^3.15.3",
+    "naive-ui": "^2.43.2",
     "vue": "^3.5.13"
   },
   "devDependencies": {
