@@ -17,21 +17,21 @@ const editor = useEditor({
 });
 
 let uid : string = '';
+let chapter = null;
 
 async function save() {
     const content = editor.value?.getJSON();
     if (!content) return;
-    const contentStr = JSON.stringify(content, null, 2);
-    await saveContent(uid, contentStr);
+    // const contentStr = JSON.stringify(content, null, 2);
+    chapter.body = content;
+    await saveContent(uid, chapter);
 }
 
 async function load(target_uid : string = 'test') {
     uid = target_uid;
-    const contentStr = await loadContent(uid);
-    console.log('Loaded content ', uid, ' : ', contentStr)
-    if (!contentStr) return;
-    const content = JSON.parse(contentStr);
-    editor.value?.commands.setContent(content);
+    chapter = await loadContent(uid);
+    console.log("Loaded content ", uid, " : ", chapter);
+    editor.value?.commands.setContent(chapter.body);
 }
 
 defineExpose({

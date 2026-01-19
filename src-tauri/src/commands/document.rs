@@ -1,11 +1,11 @@
 use tauri::{AppHandle, command, Runtime, Manager};
 
 use crate::constants::{SAVE_FOLDER, FILE_EXT, META_EXT};
-use crate::services::{versioning::{save_version, new_uid}, metadata::{workInfo, chapterReference, chapterHeader}};
+use crate::services::{versioning::{save_version, new_uid}, metadata::{workInfo, chapterReference, chapterHeader, chapter}};
 use crate::utils::fs::{read_file};
 
 #[command]
-pub fn save_content<R: Runtime>(app: AppHandle<R>, mut uid: String, content: String) -> Result<String, String> {
+pub fn save_content<R: Runtime>(app: AppHandle<R>, mut uid: String, content: serde_json::Value) -> Result<String, String> {
     let mut save_dir = app.path().document_dir().map_err(|_| "Could not find documents directory".to_string())?;
     save_dir.push(SAVE_FOLDER);
     if !save_dir.exists() {
@@ -17,20 +17,22 @@ pub fn save_content<R: Runtime>(app: AppHandle<R>, mut uid: String, content: Str
     }
     let filename : String = format!("{}{}", uid, FILE_EXT);
 
-    match save_version(&save_dir, &filename, &content) {
+    let content_str = serde_json::to_string_pretty(&content).map_err(|_| "Stringfy Failed!".to_string())?;
+
+    match save_version(&save_dir, &filename, &content_str) {
         Ok(msg) => Ok(msg),
         Err(e) => Err(e.to_string()),
     }
 }
 
 #[command]
-pub fn load_content<R: Runtime>(app: AppHandle<R>, uid: String) -> Result<String, String> {
+pub fn load_content<R: Runtime>(app: AppHandle<R>, uid: String) -> Result<chapter, String> {
     let mut save_dir = app.path().document_dir().map_err(|_| "Could not find documents directory".to_string())?;
     save_dir.push(SAVE_FOLDER);
     let mut file_path = save_dir.clone();
     file_path.push(format!("{}{}", uid, FILE_EXT));
     match read_file(&file_path) {
-        Ok(data) => Ok(data),
+        Ok(data) => serde_json::from_str::<chapter>(&data).map_err(|e| e.to_string()),
         Err(e) => Err(e.to_string()),
     }
 }
@@ -92,7 +94,10 @@ pub fn create_new_work<R: Runtime>(app: AppHandle<R>, name: String, author: Stri
     let work = workInfo::new(name.clone(), author);
     let first_chap_uid = work.chapters[0][0].uid.clone();
 
-    match save_version(&save_dir, &format!("{}{}", first_chap_uid, FILE_EXT), "{}") {
+    let chap_content = chapter::new(&work, &work.chapters[0][0]);
+    let chap_content_str = serde_json::to_string_pretty(&chap_content).map_err(|_| "Stringfy Failed!".to_string())?;
+
+    match save_version(&save_dir, &format!("{}{}", first_chap_uid, FILE_EXT), &chap_content_str) {
         Ok(_) => (),
         Err(e) => return Err(e.to_string()),
     }

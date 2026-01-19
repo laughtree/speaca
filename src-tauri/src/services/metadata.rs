@@ -9,6 +9,13 @@ pub struct chapterHeader {
     pub chapter_number: u32,
     pub title: String,
     pub uid: String,
+    pub tags: Vec<String>
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct chapter {
+    pub header: chapterHeader,
+    pub body: serde_json::Value
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -52,5 +59,28 @@ impl workInfo {
     pub fn update_latest(&mut self, chapter: u32, branch: u32) {
         self.latest_edited_chapter = chapter;
         self.latest_edited_branch = branch;
+    }
+}
+
+impl chapterHeader {
+    pub fn new(title: String, parent_work: String, chapter_number: u32, uid: String) -> Self {
+        chapterHeader {
+            parent_work,
+            chapter_number,
+            title,
+            uid,
+            tags: Vec::new(),
+        }
+    }
+}
+
+impl chapter {
+    pub fn new (parent_work: &workInfo, chapInfo: &chapterReference) -> Self {
+        let work = parent_work.clone();
+        let chap = chapInfo.clone();
+        chapter {
+            header: chapterHeader::new(chap.title, work.title, work.latest_edited_chapter, chap.uid),
+            body: serde_json::from_str("{}").expect("")
+        }
     }
 }
