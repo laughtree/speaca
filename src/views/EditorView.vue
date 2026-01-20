@@ -1,14 +1,30 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { NButton } from 'naive-ui';
+import { ref } from 'vue'
+
+import Editor from '../components/Editor.vue';
+import EditingPath from '../components/EditingPath.vue';
 
 const router = useRouter();
-</script>
 
+const editor = ref<InstanceType<typeof Editor> | null>(null);
+
+</script>
 <template>
   <div>
-    <n-button @click="router.back()">回首頁</n-button>
-    <hr />
-    <h2>編輯器頁面</h2>
+    <div id="header" class="container">
+      <editing-path />
+      <n-button id="back-btn" @click="router.back()">回首頁</n-button>
+    </div>
+    <Editor ref="editor"/>
   </div>
 </template>
+<style scoped>
+#back-btn {
+  margin-left: auto;
+}
+editing-path {
+  
+}
+</style>

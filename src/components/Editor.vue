@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { EditorContent, useEditor } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
-import { saveContent, loadContent } from '../apis/document';
+import { useRoute } from 'vue-router';
+import { ref, watch } from 'vue';
+import { NButton, NSpace } from 'naive-ui';
+
+import { editingWork, editingChapter } from '../store';
+import { loadContent, saveContent } from '../apis/document';
+
+const route = useRoute();
 
 const editor = useEditor({
     extensions: [
@@ -16,48 +23,43 @@ const editor = useEditor({
     autofocus: true,
 });
 
-let uid : string = '';
-let chapter = null;
+const uid = ref<string>('');
 
-async function save() {
-    const content = editor.value?.getJSON();
-    if (!content) return;
-    // const contentStr = JSON.stringify(content, null, 2);
-    chapter.body = content;
-    await saveContent(uid, chapter);
+const loadChapter = async () => {
+    editingChapter.value = loadContent(uid.value);
 }
 
-async function load(target_uid : string = 'test') {
-    uid = target_uid;
-    chapter = await loadContent(uid);
-    console.log("Loaded content ", uid, " : ", chapter);
-    editor.value?.commands.setContent(chapter.body);
+const saveChapter = async () => {
+    saveContent(uid.value, editingChapter.value);
 }
 
-defineExpose({
-    load,
-    save,
-});
+watch(
+    () => route.params.uid, 
+    async (newUid) => {
+        if(newUid) {
+            uid.value = newUid as string;
+            editingWork.value = await loadContent(uid.value);
+            editor.value?.commands.setContent(editingWork.value.body);
+        }
+    },
+    { immediate: true }
+);
 </script>
 
 <template>
     <div id="editor" class="container" v-if="editor">
-        <div id="editor-header" class="container">
-            <!-- <h2>Rich Text Editor</h2> -->
-        </div>
-        <div id="editor-toolbar" class="container toolbar">
-            <button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }">Bold</button>
-            <button @click="editor.chain().focus().toggleItalic().run()" :class="{ 'is-active': editor.isActive('italic') }">Italic</button>
-            <button @click="editor.chain().focus().toggleUnderline().run()" :class="{ 'is-active': editor.isActive('underline') }">Underline</button>
-            <button @click="editor.chain().focus().toggleStrike().run()" :class="{ 'is-active': editor.isActive('strike') }">Strike</button>
-        </div>
+        <n-space id="editor-toolbar" class="container toolbar">
+            <n-button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }" >Bold</n-button>
+            <n-button @click="editor.chain().focus().toggleItalic().run()" :class="{ 'is-active': editor.isActive('italic') }">Italic</n-button>
+            <n-button @click="editor.chain().focus().toggleUnderline().run()" :class="{ 'is-active': editor.isActive('underline') }">Underline</n-button>
+            <n-button @click="editor.chain().focus().toggleStrike().run()" :class="{ 'is-active': editor.isActive('strike') }">Strike</n-button>
+        </n-space>
         <div id="editor-content" class="container">
             <EditorContent :editor="editor" />
         </div>
-        <div id="editor-footer" class="container toolbar align-right">
-            <button @click="save()">Save</button>
-            <button @click="editor.chain().focus().setContent('').run()">Reset</button>
-        </div>
+        <n-space id="editor-footer" class="container toolbar align-right">
+            <n-button @click="saveChapter">Save</n-button>
+        </n-space>
     </div>
 </template>
 
@@ -78,10 +80,6 @@ defineExpose({
 }
 
 button {
-    margin-right: 8px;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
     background-color: #e0e0e0;
     cursor: pointer;
 }
@@ -116,6 +114,4 @@ button.is-active {
     margin-bottom: 8px;
     font-weight: bold;
 }
-
-
 </style>
