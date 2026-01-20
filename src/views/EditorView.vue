@@ -69,14 +69,16 @@ watch(
   <div class="container">
     <div id="header" class="container">
       <editing-path />
-      <n-button id="back-btn" @click="router.back()">回首頁</n-button>
     </div>
     <div id="editor" class="container" v-if="editor">
-      <n-space id="editor-toolbar" class="container toolbar">
-        <n-button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }" >Bold</n-button>
-        <n-button @click="editor.chain().focus().toggleItalic().run()" :class="{ 'is-active': editor.isActive('italic') }">Italic</n-button>
-        <n-button @click="editor.chain().focus().toggleUnderline().run()" :class="{ 'is-active': editor.isActive('underline') }">Underline</n-button>
-        <n-button @click="editor.chain().focus().toggleStrike().run()" :class="{ 'is-active': editor.isActive('strike') }">Strike</n-button>
+      <n-space id="editor-toolbar" class="container toolbar" justify="space-between">
+        <n-space>
+          <n-button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }" >Bold</n-button>
+          <n-button @click="editor.chain().focus().toggleItalic().run()" :class="{ 'is-active': editor.isActive('italic') }">Italic</n-button>
+          <n-button @click="editor.chain().focus().toggleUnderline().run()" :class="{ 'is-active': editor.isActive('underline') }">Underline</n-button>
+          <n-button @click="editor.chain().focus().toggleStrike().run()" :class="{ 'is-active': editor.isActive('strike') }">Strike</n-button>
+        </n-space>
+        <n-button id="back-btn" @click="router.back()">回首頁</n-button>
       </n-space>
       <div id="editor-content" class="container">
         <EditorContent :editor="editor" />
