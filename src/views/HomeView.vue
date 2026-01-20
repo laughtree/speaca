@@ -27,7 +27,6 @@ const handleNewWork = async () => {
       <n-button type="primary" @click="handleNewWork">
         新建作品
       </n-button>
-      
       <n-button @click="handleLoadWork">
         開啟最後編輯
       </n-button>

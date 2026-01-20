@@ -30,10 +30,19 @@
 .container {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 #header {
   align-items: center;
   flex-direction: row;
+  width: 100%;
+  height: auto;
+}
+
+html, body, #app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 </style>
