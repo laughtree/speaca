@@ -27,12 +27,14 @@ const editor = useEditor({
 });
 
 const uid = ref<string>('');
+const loading = ref<boolean>(false);
 
 const loadChapter = async () => {
     editingChapter.value = await loadContent(uid.value);
 }
 
 const saveChapter = async () => {
+    editingChapter.value.body = editor.value?.getJSON();
     await saveContent(uid.value, editingChapter.value);
 }
 
@@ -40,9 +42,23 @@ watch(
     () => route.params.uid, 
     async (newUid) => {
         if(newUid) {
-            uid.value = newUid as string;
-            editingWork.value = await loadContent(uid.value);
-            editor.value?.commands.setContent(editingWork.value.body);
+          loading.value = true;
+          uid.value = newUid as string;
+
+          console.log("uid updated! : ", uid.value)
+
+          try {
+            const content = await loadContent(uid.value);
+            editingChapter.value = content;
+
+            if(editor.value) {
+              editor.value.commands.setContent(editingChapter.value.body);
+            }
+          } catch(e) {
+            console.log("Load Chapter Failed! : ", e);
+          } finally {
+            loading.value = false;
+          }
         }
     },
     { immediate: true }
@@ -50,26 +66,27 @@ watch(
 
 </script>
 <template>
-  <div>
+  <div class="container">
     <div id="header" class="container">
       <editing-path />
       <n-button id="back-btn" @click="router.back()">回首頁</n-button>
     </div>
     <div id="editor" class="container" v-if="editor">
-        <n-space id="editor-toolbar" class="container toolbar">
-            <n-button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }" >Bold</n-button>
-            <n-button @click="editor.chain().focus().toggleItalic().run()" :class="{ 'is-active': editor.isActive('italic') }">Italic</n-button>
-            <n-button @click="editor.chain().focus().toggleUnderline().run()" :class="{ 'is-active': editor.isActive('underline') }">Underline</n-button>
-            <n-button @click="editor.chain().focus().toggleStrike().run()" :class="{ 'is-active': editor.isActive('strike') }">Strike</n-button>
-        </n-space>
-        <div id="editor-content" class="container">
-            <EditorContent :editor="editor" />
-        </div>
-        <n-space id="editor-footer" class="container toolbar align-right">
-            <n-button @click="saveChapter">Save</n-button>
-        </n-space>
+      <n-space id="editor-toolbar" class="container toolbar">
+        <n-button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }" >Bold</n-button>
+        <n-button @click="editor.chain().focus().toggleItalic().run()" :class="{ 'is-active': editor.isActive('italic') }">Italic</n-button>
+        <n-button @click="editor.chain().focus().toggleUnderline().run()" :class="{ 'is-active': editor.isActive('underline') }">Underline</n-button>
+        <n-button @click="editor.chain().focus().toggleStrike().run()" :class="{ 'is-active': editor.isActive('strike') }">Strike</n-button>
+      </n-space>
+      <div id="editor-content" class="container">
+        <EditorContent :editor="editor" />
+      </div>
+      <n-space id="editor-footer" class="container toolbar">
+        <n-button @click="saveChapter">Save</n-button>
+      </n-space>
     </div>
   </div>
+  
 </template>
 <style scoped>
 #back-btn {
@@ -79,15 +96,18 @@ watch(
 #editor {
     border: 1px solid #ccc;
     border-radius: 4px;
-    padding: 16px;
+    padding: 8px;
     background-color: #cfcec9;
-    
-    height: 100%;
+}
+
+.toolbar nav {
+  height: 100%;
 }
 
 .toolbar {
     flex-direction: row;
     align-items: center;
+    height: auto;
 }
 
 .align-right {
