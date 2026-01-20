@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { NButton, NSpace } from 'naive-ui';
+import { NButton, NSpace, useMessage } from 'naive-ui';
 
 import { createNewWork, loadMeta } from '../apis/document';
 import { editingWork, currentUser } from '../store';
 
 const router = useRouter();
+const message = useMessage();
 
 const handleLoadWork = async () => {
   editingWork.value = await loadMeta("New Work");
@@ -14,9 +15,13 @@ const handleLoadWork = async () => {
 };
 
 const handleNewWork = async () => {
-  editingWork.value = await createNewWork("New Work", currentUser.value);
-  console.log('Created new work: ', editingWork.value);
-  router.push(`editor/${editingWork.value.chapters[editingWork.value.latest_edited_chapter][editingWork.value.latest_edited_branch].uid}`);
+  try {
+    editingWork.value = await createNewWork("New Work", currentUser.value);
+    console.log('Created new work: ', editingWork.value);
+    router.push(`editor/${editingWork.value.chapters[editingWork.value.latest_edited_chapter][editingWork.value.latest_edited_branch].uid}`);
+  } catch (e) { 
+    message.error(e as string);
+  }
 };
 </script>
 

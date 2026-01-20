@@ -100,6 +100,12 @@ watch(
     background-color: #cfcec9;
 }
 
+#editor-content {
+  overflow-y: auto;
+  padding: 8px;
+  align-items: center;
+}
+
 .toolbar nav {
   height: 100%;
 }
@@ -125,6 +131,13 @@ button.is-active {
 
 :deep(.tiptap) {
     outline: none;
+    background-color: #ececec;
+
+    width: 60vw;
+    max-width: 800px;
+    min-height: 1000px;
+
+    padding: 20px;
 }
 
 :deep(.tiptap p) {
@@ -132,6 +145,7 @@ button.is-active {
     line-height: 1.8;
     margin-top: 0.9em;
     margin-bottom: 0.9em;
+    font-size: 24px;
 }
 
 :deep(.tiptap p.is-empty::before) {
