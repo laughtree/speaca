@@ -2,7 +2,7 @@
 import { EditorContent, useEditor } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
 import { useRouter, useRoute } from 'vue-router';
-import { NButton, NSpace } from 'naive-ui';
+import { NButton, NSpace, NLayout, NLayoutSider, NLayoutContent, NLayoutHeader, NLayoutFooter } from 'naive-ui';
 import { ref, watch } from 'vue'
 
 import EditingPath from '../components/EditingPath.vue';
@@ -66,31 +66,49 @@ watch(
 
 </script>
 <template>
-  <div class="container">
-    <div id="header" class="container">
-      <editing-path />
-    </div>
-    <div id="editor" class="container" v-if="editor">
-      <n-space id="editor-toolbar" class="container toolbar" justify="space-between">
-        <n-space>
-          <n-button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }" >Bold</n-button>
-          <n-button @click="editor.chain().focus().toggleItalic().run()" :class="{ 'is-active': editor.isActive('italic') }">Italic</n-button>
-          <n-button @click="editor.chain().focus().toggleUnderline().run()" :class="{ 'is-active': editor.isActive('underline') }">Underline</n-button>
-          <n-button @click="editor.chain().focus().toggleStrike().run()" :class="{ 'is-active': editor.isActive('strike') }">Strike</n-button>
-        </n-space>
-        <n-button id="back-btn" @click="router.back()">回首頁</n-button>
-      </n-space>
-      <div id="editor-content" class="container">
-        <EditorContent :editor="editor" />
+  <div class="container" id="editorview-outer">
+    <div class="container">
+      <div id="header" class="container">
+        <editing-path />
       </div>
-      <n-space id="editor-footer" class="container toolbar">
-        <n-button @click="saveChapter">Save</n-button>
-      </n-space>
+      <div id="editor" class="container" v-if="editor">
+        <n-space id="editor-toolbar" class="container toolbar" justify="space-between">
+          <div class="toolbar">
+            <n-button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }" >Bold</n-button>
+            <n-button @click="editor.chain().focus().toggleItalic().run()" :class="{ 'is-active': editor.isActive('italic') }">Italic</n-button>
+            <n-button @click="editor.chain().focus().toggleUnderline().run()" :class="{ 'is-active': editor.isActive('underline') }">Underline</n-button>
+            <n-button @click="editor.chain().focus().toggleStrike().run()" :class="{ 'is-active': editor.isActive('strike') }">Strike</n-button>
+          </div>
+          <n-button id="back-btn" @click="router.back()">回首頁</n-button>
+        </n-space>
+        <n-layout :has-sider=true style="height: 100%; width: 100%; flex: 1;">
+          <n-layout-sider
+              placement="right"
+              collapse-mode="width"
+              :collapsed-width="0"
+              :width="240"
+              show-trigger="bar"
+              content-style="padding: 24px;"
+            >
+          </n-layout-sider>
+          <n-layout-content style="overflow: hidden;">
+            <EditorContent :editor="editor" />
+          </n-layout-content>
+        </n-layout>
+        <n-space id="editor-footer" class="container toolbar">
+          <n-button @click="saveChapter">Save</n-button>
+        </n-space>
+      </div>
     </div>
   </div>
-  
 </template>
 <style scoped>
+#editorview-outer {
+  flex-direction: row;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+}
 #back-btn {
   margin-left: auto;
 }
@@ -100,6 +118,10 @@ watch(
     border-radius: 4px;
     padding: 8px;
     background-color: #cfcec9;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
 }
 
 #editor-content {
@@ -135,11 +157,13 @@ button.is-active {
     outline: none;
     background-color: #ececec;
 
-    width: 60vw;
-    max-width: 800px;
-    min-height: 1000px;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
 
     padding: 20px;
+    box-sizing: border-box;
 }
 
 :deep(.tiptap p) {
