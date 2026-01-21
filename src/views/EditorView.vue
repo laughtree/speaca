@@ -66,49 +66,78 @@ watch(
 
 </script>
 <template>
-  <div class="container" id="editorview-outer">
-    <div class="container">
-      <div id="header" class="container">
-        <editing-path />
-      </div>
-      <div id="editor" class="container" v-if="editor">
-        <n-space id="editor-toolbar" class="container toolbar" justify="space-between">
-          <div class="toolbar">
-            <n-button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }" >Bold</n-button>
-            <n-button @click="editor.chain().focus().toggleItalic().run()" :class="{ 'is-active': editor.isActive('italic') }">Italic</n-button>
-            <n-button @click="editor.chain().focus().toggleUnderline().run()" :class="{ 'is-active': editor.isActive('underline') }">Underline</n-button>
-            <n-button @click="editor.chain().focus().toggleStrike().run()" :class="{ 'is-active': editor.isActive('strike') }">Strike</n-button>
-          </div>
-          <n-button id="back-btn" @click="router.back()">回首頁</n-button>
-        </n-space>
-        <n-layout :has-sider=true style="height: 100%; width: 100%; flex: 1;">
-          <n-layout-sider
-              placement="right"
-              collapse-mode="width"
-              :collapsed-width="0"
-              :width="240"
-              show-trigger="bar"
-              content-style="padding: 24px;"
-            >
-          </n-layout-sider>
-          <n-layout-content style="overflow: hidden;">
-            <EditorContent :editor="editor" />
-          </n-layout-content>
-        </n-layout>
-        <n-space id="editor-footer" class="container toolbar">
-          <n-button @click="saveChapter">Save</n-button>
-        </n-space>
-      </div>
+  <div id="editorview-outer">
+    <div id="sider-left"></div>
+    <div id="editor-area">
+        <div id="header" class="container">
+          <editing-path />
+        </div>
+        <div id="editor" class="container" v-if="editor">
+          <n-space id="editor-toolbar" class="container toolbar" justify="space-between">
+            <div class="toolbar">
+              <n-button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }" >Bold</n-button>
+              <n-button @click="editor.chain().focus().toggleItalic().run()" :class="{ 'is-active': editor.isActive('italic') }">Italic</n-button>
+              <n-button @click="editor.chain().focus().toggleUnderline().run()" :class="{ 'is-active': editor.isActive('underline') }">Underline</n-button>
+              <n-button @click="editor.chain().focus().toggleStrike().run()" :class="{ 'is-active': editor.isActive('strike') }">Strike</n-button>
+            </div>
+            <n-button id="back-btn" @click="router.back()">回首頁</n-button>
+          </n-space>
+          <n-layout :has-sider=true style="height: 100%; width: 100%; flex: 1;">
+            
+            <n-layout-content style="overflow: hidden;">
+              <EditorContent :editor="editor" />
+            </n-layout-content>
+          </n-layout>
+          <n-space id="editor-footer" class="container toolbar">
+            <n-button @click="saveChapter">Save</n-button>
+          </n-space>
+        </div>
+    </div>
+    <div id="sider-right">
+      <n-layout :has-sider="true" style="height: 100%;">
+        <n-layout-sider
+          placement="right"
+          collapse-mode="width"
+          :collapsed-width="0"
+          :width="240"
+          show-trigger="bar"
+          content-style="padding: 24px;"
+        >
+          <n-space>
+
+          </n-space>
+        </n-layout-sider>
+        <n-layout-content>
+
+        </n-layout-content>
+      </n-layout>
     </div>
   </div>
 </template>
 <style scoped>
 #editorview-outer {
-  flex-direction: row;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   height: 100vh;
   width: 100vw;
+  gap: 0;
 }
+
+#sider-left {
+  background-color: transparent;
+}
+
+#sider-right {
+  background-color: transparent;
+}
+
+#editor-area {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden;
+  min-width: 800px;
+}
+
 #back-btn {
   margin-left: auto;
 }
@@ -122,6 +151,7 @@ watch(
     flex-direction: column;
     flex: 1;
     overflow: hidden;
+    height: 100%;
 }
 
 #editor-content {
