@@ -50,18 +50,21 @@ watch(
           try {
             const content = await loadContent(uid.value);
             editingChapter.value = content;
+            console.log("Loaded Chapter: ", editingChapter.value);
 
             if(editor.value) {
               editor.value.commands.setContent(editingChapter.value.body);
             }
           } catch(e) {
-            console.log("Load Chapter Failed! : ", e);
+              console.log("Load Chapter Failed! : ", e);
           } finally {
-            loading.value = false;
+              loading.value = false;
           }
         }
     },
-    { immediate: true }
+    {
+      immediate: true,
+    }
 );
 
 </script>
