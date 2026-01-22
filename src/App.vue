@@ -1,18 +1,32 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import { NMessageProvider } from 'naive-ui';
+import { NMessageProvider, NNotificationProvider, NLoadingBarProvider, NModalProvider, NDialogProvider } from 'naive-ui'
+
+import ProviderHandler from './components/ProviderHandler.vue';
 
 const route = useRoute();
 </script>
 <template>
   <main class="container">
-    <router-view v-slot="{ Component }">
-      <transition name="fade" mode="out-in">
-        <n-message-provider>
-          <component :is="Component"/>
-        </n-message-provider>
-      </transition>
-    </router-view>
+    <n-notification-provider>
+      <n-message-provider>
+        <n-loading-bar-provider>
+          <n-modal-provider>
+            <n-dialog-provider>
+
+              <router-view v-slot="{ Component }">
+                <transition name="fade" mode="out-in">
+                  <component :is="Component"/>
+                </transition>
+              </router-view>
+
+              <ProviderHandler />
+
+            </n-dialog-provider>
+          </n-modal-provider>
+        </n-loading-bar-provider>
+      </n-message-provider>
+    </n-notification-provider>
   </main>
 </template>
 
