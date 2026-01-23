@@ -2,7 +2,7 @@
 import { EditorContent, useEditor } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
 import { useRouter, useRoute } from 'vue-router';
-import { NButton, NSpace, NLayout, NLayoutSider, NLayoutContent, NLayoutHeader, NLayoutFooter } from 'naive-ui';
+import { NButton, NSpace, NLayout, NLayoutSider, NLayoutContent, NLayoutHeader, NLayoutFooter, NButtonGroup } from 'naive-ui';
 import { ref, watch } from 'vue'
 
 import EditingPath from '../components/EditingPath.vue';
@@ -78,10 +78,12 @@ watch(
         <div id="editor" class="container" v-if="editor">
           <n-space id="editor-toolbar" class="container toolbar" justify="space-between">
             <div class="toolbar">
-              <n-button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }" >Bold</n-button>
-              <n-button @click="editor.chain().focus().toggleItalic().run()" :class="{ 'is-active': editor.isActive('italic') }">Italic</n-button>
-              <n-button @click="editor.chain().focus().toggleUnderline().run()" :class="{ 'is-active': editor.isActive('underline') }">Underline</n-button>
-              <n-button @click="editor.chain().focus().toggleStrike().run()" :class="{ 'is-active': editor.isActive('strike') }">Strike</n-button>
+              <n-button-group>
+                <n-button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }" >Bold</n-button>
+                <n-button @click="editor.chain().focus().toggleItalic().run()" :class="{ 'is-active': editor.isActive('italic') }">Italic</n-button>
+                <n-button @click="editor.chain().focus().toggleUnderline().run()" :class="{ 'is-active': editor.isActive('underline') }">Underline</n-button>
+                <n-button @click="editor.chain().focus().toggleStrike().run()" :class="{ 'is-active': editor.isActive('strike') }">Strike</n-button>
+              </n-button-group>
             </div>
             <n-button id="back-btn" @click="router.back()">回首頁</n-button>
           </n-space>

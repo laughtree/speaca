@@ -1,40 +1,41 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { NButton, NSpace, useMessage } from 'naive-ui';
+import { NButton, NFlex } from 'naive-ui';
+import { ref } from 'vue';
 
-import { createNewWork, loadMeta } from '../apis/document';
-import { editingWork, currentUser } from '../store';
+import { loadMeta } from '../apis/document';
+import { editingWork, message } from '../store';
+
+import WorkList from '../components/WorkList.vue';
+import WorkCreationModal from '../components/WorkCreationModal.vue';
 
 const router = useRouter();
-const message = useMessage();
+
+const workCreationModalRef = ref<any | null>(null);
 
 const handleLoadWork = async () => {
-  editingWork.value = await loadMeta("New Work");
-  console.log("Loaded work: ", editingWork.value);
-  router.push(`editor/${editingWork.value.chapters[editingWork.value.latest_edited_chapter][editingWork.value.latest_edited_branch].uid}`);
-};
-
-const handleNewWork = async () => {
   try {
-    editingWork.value = await createNewWork("New Work", currentUser.value);
-    console.log('Created new work: ', editingWork.value);
+    editingWork.value = await loadMeta("New Work");
+    console.log("Loaded work: ", editingWork.value);
     router.push(`editor/${editingWork.value.chapters[editingWork.value.latest_edited_chapter][editingWork.value.latest_edited_branch].uid}`);
-  } catch (e) { 
-    message.error(e as string);
+  } catch (e) {
+    message.value?.error(e as string);
   }
 };
 </script>
 
 <template>
-  <div style="padding: 50px;">
+  <n-flex vertical>
     <h1>我的作品集</h1>
-    <n-space>
-      <n-button type="primary" @click="handleNewWork">
+    <n-flex>
+      <n-button type="primary" @click="workCreationModalRef?.toggleShowing">
         新建作品
       </n-button>
       <n-button @click="handleLoadWork">
         開啟最後編輯
       </n-button>
-    </n-space>
-  </div>
+      <WorkList />
+    </n-flex>
+    <WorkCreationModal ref="workCreationModalRef" />
+  </n-flex>
 </template>

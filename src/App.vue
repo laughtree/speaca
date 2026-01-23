@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
 import { NMessageProvider, NNotificationProvider, NLoadingBarProvider, NModalProvider, NDialogProvider } from 'naive-ui'
 
 import ProviderHandler from './components/ProviderHandler.vue';
-
-const route = useRoute();
 </script>
 <template>
   <main class="container">
