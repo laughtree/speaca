@@ -8,7 +8,7 @@ import { ref, watch } from 'vue'
 import EditingPath from '../components/EditingPath.vue';
 
 import { editingWork, editingChapter } from '../store';
-import { loadContent, saveContent } from '../apis/document';
+import { loadContent, saveContent, saveMeta } from '../apis/document';
 
 const router = useRouter();
 const route = useRoute();
@@ -36,6 +36,7 @@ const loadChapter = async () => {
 const saveChapter = async () => {
     editingChapter.value.body = editor.value?.getJSON();
     await saveContent(uid.value, editingChapter.value);
+    await saveMeta(editingWork.value.title, JSON.stringify(editingWork.value));
 }
 
 watch(

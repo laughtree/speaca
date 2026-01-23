@@ -20,17 +20,14 @@ const handleNewWork = async () => {
   try {
     editingWork.value = await createNewWork(title.value, currentUser.value);
 
+    console.log('Created new work: ', editingWork.value);
+
+
     if(tags.value.length > 0) {
         editingWork.value.tags = tags.value;
-        try {
-            await saveMeta(editingWork.value.title, JSON.stringify(editingWork.value));
-        } catch (e) {
-            message.value?.error(e as string);
-        }
-        
+        await saveMeta(editingWork.value.title, JSON.stringify(editingWork.value)); // wirte back for tags
     }
 
-    console.log('Created new work: ', editingWork.value);
     router.push(`editor/${editingWork.value.chapters[editingWork.value.latest_edited_chapter][editingWork.value.latest_edited_branch].uid}`);
   } catch (e) { 
     message.value?.error(e as string);
