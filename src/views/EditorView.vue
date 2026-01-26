@@ -31,6 +31,7 @@ const loading = ref<boolean>(false);
 
 const loadChapter = async () => {
     editingChapter.value = await loadContent(uid.value);
+    
 }
 
 const saveChapter = async () => {

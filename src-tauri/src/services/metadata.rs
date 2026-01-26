@@ -7,6 +7,7 @@ use crate::services::versioning::{new_uid, save_version};
 pub struct chapterHeader {
     pub parent_work: String,
     pub chapter_number: u32,
+    pub branch_number: u32,
     pub title: String,
     pub uid: String,
     pub tags: Vec<String>
@@ -69,10 +70,11 @@ impl workInfo {
 }
 
 impl chapterHeader {
-    pub fn new(title: String, parent_work: String, chapter_number: u32, uid: String) -> Self {
+    pub fn new(title: String, parent_work: String, chapter_number: u32, branch_number: u32, uid: String) -> Self {
         chapterHeader {
             parent_work,
             chapter_number,
+            branch_number,
             title,
             uid,
             tags: Vec::new(),
@@ -85,7 +87,7 @@ impl chapter {
         let work = parent_work.clone();
         let chap = chapInfo.clone();
         chapter {
-            header: chapterHeader::new(chap.title, work.title, work.latest_edited_chapter, chap.uid),
+            header: chapterHeader::new(chap.title, work.title, work.latest_edited_chapter, work.latest_edited_branch, chap.uid),
             body: serde_json::from_str("{}").expect("")
         }
     }
