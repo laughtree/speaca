@@ -74,7 +74,7 @@ onMounted(() => {
             <template #default="{ item }">
                 <n-flex :key="item.key" class="work-item-card">
                     <n-button
-                        tertiaty
+                        tertiary
                         block
                         @click="handleLoadWork(item.label)"
                     >

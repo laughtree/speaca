@@ -11,7 +11,7 @@ import WorkCreationModal from '../components/WorkCreationModal.vue';
 
 const router = useRouter();
 
-const workCreationModalRef = ref<any | null>(null);
+const workCreationModalRef = ref<any>(null);
 
 const handleLoadWork = async () => {
   try {
