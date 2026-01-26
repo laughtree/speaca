@@ -14,6 +14,7 @@ pub fn run() {
             commands::document::save_meta,
             commands::document::load_meta,
             commands::document::create_new_work,
+            commands::workspace::get_works,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -110,9 +110,9 @@ watch(
           show-trigger="bar"
           content-style="padding: 24px;"
         >
-          <n-space>
-
-          </n-space>
+          <n-flex>
+            
+          </n-flex>
         </n-layout-sider>
         <n-layout-content>
 

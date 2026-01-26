@@ -20,4 +20,8 @@ async function createNewWork(name: string, author: string): Promise<string> {
   return await invoke('create_new_work', { name, author });
 }
 
-export { loadContent, saveContent, loadMeta, saveMeta, createNewWork };
+async function get_works(): Promise<string[]> {
+  return await invoke('get_works', {});
+}
+
+export { loadContent, saveContent, loadMeta, saveMeta, createNewWork, get_works };

@@ -1,6 +1,6 @@
 [[permission]]
 identifier = "document-r"
-commands.allow = ["load_content", "load_meta"]
+commands.allow = ["load_content", "load_meta", "get_works"]
 
 [[permission]]
 identifier = "document-w"

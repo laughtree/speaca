@@ -34,8 +34,8 @@ const handleLoadWork = async () => {
       <n-button @click="handleLoadWork">
         開啟最後編輯
       </n-button>
-      <WorkList />
     </n-flex>
+    <WorkList />
     <WorkCreationModal ref="workCreationModalRef" />
   </n-flex>
 </template>
