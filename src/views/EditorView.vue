@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import StarterKit from '@tiptap/starter-kit';
 import { useRouter, useRoute } from 'vue-router';
-import { NButton, NSpace, NLayout, NLayoutSider, NLayoutContent, NButtonGroup } from 'naive-ui';
+import { DrawerPlacement, NButton, NButtonGroup, NDrawer } from 'naive-ui';
 import { ref, watch } from 'vue'
 
 import EditingPath from '../components/EditingPath.vue';
@@ -16,6 +15,8 @@ const route = useRoute();
 const uid = ref<string>('');
 const loading = ref<boolean>(false);
 const editor = ref<any>(null);
+const active = ref<boolean>(false);
+const placement = ref<DrawerPlacement>('right');
 
 const saveChapter = async () => {
     editingChapter.value.body = editor.value?.getJSON();
@@ -65,88 +66,82 @@ watch(
       id="editor-area"
       style="flex: 1;"
     >
-        <n-flex id="header" class="container">
-          <editing-path />
-        </n-flex>
-        <n-flex id="editor" class="container">
-          <n-flex 
-            id="editor-toolbar" 
-            class="container toolbar" 
-            justify="space-between"
-            v-if="editor && editor?.instance"
-          >
-            <n-button-group>
-              <n-button 
-                @click="editor?.instance?.chain().focus().toggleBold().run()" 
-                :class="{ 'is-active': editor.isActive('bold') }" 
-              >
-                Bold
-              </n-button>
-              <n-button 
-                @click="editor?.instance?.chain().focus().toggleItalic().run()" 
-                :class="{ 'is-active': editor.isActive('italic') }"
-              >
-                Italic
-              </n-button>
-              <n-button 
-                @click="editor?.instance?.chain().focus().toggleUnderline().run()" 
-                :class="{ 'is-active': editor.isActive('underline') }"
-              >
-                Underline
-              </n-button>
-              <n-button 
-                @click="editor?.instance?.chain().focus().toggleStrike().run()" 
-                :class="{ 'is-active': editor.isActive('strike') }"
-              >
-                Strike
-              </n-button>
-            </n-button-group>
+      <n-flex id="header" class="container">
+        <editing-path />
+      </n-flex>
+      <n-flex id="editor" class="container">
+        <n-flex 
+          id="editor-toolbar" 
+          class="container toolbar" 
+          justify="space-between"
+          v-if="editor && editor?.instance"
+        >
+          <n-button-group>
             <n-button 
-              id="back-btn" 
-              @click="router.back()"
+              @click="editor?.instance?.chain().focus().toggleBold().run()" 
+              :class="{ 'is-active': editor.isActive('bold') }" 
             >
-              回首頁
+              Bold
             </n-button>
-          </n-flex>
-          <n-flex
-            style="flex: 0.98; overflow-y: auto;"
+            <n-button 
+              @click="editor?.instance?.chain().focus().toggleItalic().run()" 
+              :class="{ 'is-active': editor.isActive('italic') }"
+            >
+              Italic
+            </n-button>
+            <n-button 
+              @click="editor?.instance?.chain().focus().toggleUnderline().run()" 
+              :class="{ 'is-active': editor.isActive('underline') }"
+            >
+              Underline
+            </n-button>
+            <n-button 
+              @click="editor?.instance?.chain().focus().toggleStrike().run()" 
+              :class="{ 'is-active': editor.isActive('strike') }"
+            >
+              Strike
+            </n-button>
+          </n-button-group>
+          <n-button 
+            id="back-btn" 
+            @click="router.back()"
           >
-            <Editor 
-              ref="editor"
-              style="height: 100%;"
-            />
-          </n-flex>
-          <n-flex id="editor-footer" class="container toolbar">
-            <n-button
-              @click="saveChapter"
-            >
-              Save
-            </n-button>
-          </n-flex>
+            回首頁
+          </n-button>
+        </n-flex>
+        <n-flex
+          style="flex: 0.98; overflow-y: auto;"
+        >
+          <Editor 
+            ref="editor"
+            style="height: 100%;"
+          />
+        </n-flex>
+        <n-flex 
+          id="editor-footer" 
+          class="container toolbar" 
+          justify="space-between"
+        >
+          <n-button
+            @click="saveChapter"
+          >
+            Save
+          </n-button>
+          <n-button
+            @click="active = !active"
+          >
+            Chapters
+          </n-button>
         </n-flex>
       </n-flex>
-    <n-flex 
-      id="sider-right"
-      style="flex: 1;"
-    >
-      <n-layout :has-sider="true" style="height: 100%;">
-        <n-layout-sider
-          placement="right"
-          collapse-mode="width"
-          :collapsed-width="0"
-          :width="240"
-          show-trigger="bar"
-          content-style="padding: 24px;"
-        >
-          <n-flex>
-            
-          </n-flex>
-        </n-layout-sider>
-        <n-layout-content>
-
-        </n-layout-content>
-      </n-layout>
     </n-flex>
+    <n-drawer
+      v-model:show="active"
+      :width="502"
+      :placement="placement"
+    >
+
+    </n-drawer>
   </n-flex>
 </template>
 <style scoped>
