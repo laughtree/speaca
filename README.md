@@ -1,16 +1,46 @@
-# Tauri + Vue + TypeScript
+# Speaca
+> A tool rack for novel creators
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## About
 
-## Recommended IDE Setup
+此專案旨在設計一款專為小說寫作打造的整合創作工具，為了讓所有創作者皆能享受，開發之初便決定盡可能追求效率，故選擇使用 Tauri(Rust) 進行開發，並配合 Vue 前端方便以 web app 的設計模式支援多種平台。
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+## !!重構中
 
-## Type Support For `.vue` Imports in TS
+**因專案初期構想過於發散，當前暫停開發，重構調整中**
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's Take Over mode by following these steps:
+預計將以「維持心流」為最高原則，從擴增功能性轉向追求流暢沉浸的創作體驗，先開發直覺即可理解使用的簡約編輯器，再逐步以其為基礎增加功能，讓所有輔助圍繞著補齊任何可能打斷創作的缺口，只在需要的時機出現，提供參考資料、設定與自動補全的參考。
+並已確認以下修改:
 
-1. Run `Extensions: Show Built-in Extensions` from VS Code's command palette, look for `TypeScript and JavaScript Language Features`, then right click and select `Disable (Workspace)`. By default, Take Over mode will enable itself if the default TypeScript extension is disabled.
-2. Reload the VS Code window by running `Developer: Reload Window` from the command palette.
+- 提供直接以嘗試書寫體驗引導進行的偏好設定，讓使用者能根據喜好調整體驗，以便達成自身心流
+- 以 embedded database 設計 ER model 資料庫取代自訂格式的 metadata file ，以簡化底層機制並同時獲得強大的搜索功能
+- 介面配置順著文字流方向設計，讓使用者能無縫銜接書寫與操作
+- 針對使用者點擊紀錄進行本地紀錄，動態調整自動補全與輔助提示時機
 
-You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
+## Roadmap
+目前專案規劃開發目標依優先度排序如下:
+
+- 保持文字編輯器本體簡潔易用
+- 內建模仿 git 的檔案版本管理系統，便於持續修改創作而不必不斷增加備份檔
+- 利用 Jieba 分詞配合資料庫，自動偵測作品中專有名詞並建立資料庫，提供自動補全與設定集快速統整
+- 連接雲端儲存空間以便跨裝置使用
+- 在**不外傳資料**、**不介入創意發想**的原則下引入 Local SLM 協助考究與校對
+- 基於 web app 設計不同比例的介面以支援跨平台使用
+
+已完成:
+- [x] 基本文字編輯器
+- [x] 檔案版本管理系統（後端）
+
+## Snapshot
+
+- 主頁面
+
+  <img width="1600" height="999" alt="圖片" src="https://github.com/user-attachments/assets/cd5dabe7-763d-4f79-bc86-660ca665b3e4" />
+
+- 作品創建
+
+  <img width="1600" height="1002" alt="圖片" src="https://github.com/user-attachments/assets/db91ca3c-3fe1-47ed-8b83-e8e113e34820" />
+
+- 文字編輯器
+
+  <img width="1600" height="1003" alt="圖片" src="https://github.com/user-attachments/assets/15c0d6e9-37d1-4a47-82ec-d4af19d65276" />
